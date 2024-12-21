@@ -11,3 +11,15 @@ services:
     volumes:
       - ./server:/app
       - /app/node_modules/
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.${NODE_ENV:-dev}
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+    container_name: 'chat-client'
+    volumes:
+      - ./client:/app
+      - /app/node_modules/
