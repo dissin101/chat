@@ -3,10 +3,14 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile.${NODE_ENV:-dev}
+    env_file:
+        - ./.env
     ports:
-      - "3000:3000"
+      - ${SERVER_PORT}:${SERVER_PORT}
     environment:
       NODE_ENV: ${NODE_ENV:-development}
+      CLIENT_PORT: ${CLIENT_PORT}
+      SERVER_PORT: ${SERVER_PORT}
     container_name: 'chat-server'
     volumes:
       - ./server:/app
@@ -15,10 +19,14 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile.${NODE_ENV:-dev}
+    env_file:
+      - ./.env
     ports:
-      - "3001:3001"
+      - ${CLIENT_PORT}:${CLIENT_PORT}
     environment:
       NODE_ENV: ${NODE_ENV:-development}
+      VITE_CLIENT_PORT: ${CLIENT_PORT}
+      VITE_SERVER_PORT: ${SERVER_PORT}
     container_name: 'chat-client'
     volumes:
       - ./client:/app

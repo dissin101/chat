@@ -2,28 +2,41 @@ import express from "express";
 import http from "http";
 import { Server, Socket } from "socket.io";
 import path from "path";
+import cors from "cors";
+
+const CLIENT_PORT = process.env.CLIENT_PORT;
+const SERVER_PORT = process.env.SERVER_PORT;
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: `http://localhost:${CLIENT_PORT}`,
+    methods: ["GET", "POST", "PUT", "DELETE", "UPDATE"],
+  },
+});
+
+app.use(
+  cors({
+    origin: `http://localhost:${CLIENT_PORT}`,
+  }),
+);
 
 app.use(express.static(path.join(__dirname, "../public")));
 
 io.on("connection", (socket: Socket) => {
-    console.log("A user connected");
+  console.log("A user connected");
 
-    socket.on("disconnect", () => {
-        console.log("User disconnected");
-    });
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
+  });
 
-    socket.on("chat message", (msg: string) => {
-        console.log("message: " + msg);
-        io.emit("chat message", msg);
-    });
+  socket.on("chat message", (msg: string) => {
+    console.log("message: " + msg);
+    io.emit("chat message", msg);
+  });
 });
 
-const PORT = process.env.PORT || 3000;
-
-server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+server.listen(SERVER_PORT, () => {
+  console.log(`Server running on port ${SERVER_PORT}`);
 });
