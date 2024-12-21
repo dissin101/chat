@@ -1,11 +1,5 @@
-
 const App = () => {
+  return <>Client app</>;
+};
 
-  return (
-    <>
-      Client app
-    </>
-  )
-}
-
-export default App
+export default App;
