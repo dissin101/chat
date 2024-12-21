@@ -2,8 +2,12 @@ services:
   server:
     build:
       context: ./server
+      dockerfile: Dockerfile.${NODE_ENV:-dev}
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=development
+      NODE_ENV: ${NODE_ENV:-development}
     container_name: 'chat-server'
+    volumes:
+      - ./server:/app
+      - /app/node_modules/
